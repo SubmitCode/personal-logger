@@ -1,0 +1,22 @@
+version: "3"
+services:
+  flask-app:
+    build: .
+    ports:
+      - "5000:80"
+    volumes:
+      - .:/app
+
+
+  ngrok:
+    image: ngrok/ngrok:latest
+    restart: unless-stopped
+    command:
+      - "start"
+      - "--all"
+      - "--config"
+      - "/etc/ngrok.yml" 
+    volumes:
+      - ~/.config/ngrok/ngrok.yml:/etc/ngrok.yml
+    network_mode: host
+

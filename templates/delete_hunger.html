@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h2>Delete Hunger Log Entry</h2>
+  <p>Are you sure you want to delete this hunger log entry?</p>
+  <p>Timestamp: {{ log_entry.timestamp }}</p>
+  <p>Hunger Level: {{ log_entry.hunger_level }}</p>
+  <form method="POST">
+    <button type="submit" class="btn btn-danger">Delete</button>
+  </form>
+  <a href="{{ url_for('home') }}">Cancel</a>
+{% endblock %}

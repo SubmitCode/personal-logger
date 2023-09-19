@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h2>Edit Hunger Log Entry</h2>
+  <form method="POST">
+    <div class="form-group">
+      <label for="new_hunger_level">New Hunger Level:</label>
+      <input type="number" name="new_hunger_level" id="new_hunger_level" value="{{ log_entry.hunger_level }}" required>
+    </div>
+    <button type="submit" class="btn btn-primary">Update</button>
+  </form>
+  <a href="{{ url_for('home') }}">Cancel</a>
+{% endblock %}

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}My Web App{% endblock %}</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body class="bg-light">
+    <div class="container mt-5">
+
+
+        <!-- Logout Button -->
+        {% block logout_button %}
+        <div class="row mt-2">
+            <div class="col text-center">
+                <form method="post" action="/logout">
+                    <button type="submit" class="btn btn-danger">Logout</button>
+                </form>
+            </div>
+        </div>
+        {% endblock %}
+
+        <!-- Content Section -->
+        <div class="row mt-4">
+            <div class="col">
+                {% block content %}{% endblock %}
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript for Charts -->
+    {% block scripts %}
+    <script>
+        // Fetch the data from Flask backend
+        fetch('/get_hunger_data')
+            .then(response => response.json())
+            .then(data => {
+                const timestamps = data.map(entry => entry.timestamp);
+                const localTimes = timestamps.map(convertUtcToLocal); // Convert to local time
+
+                const levels = data.map(entry => entry.hunger_level);
+                const ctx = document.getElementById('hungerChart').getContext('2d');
+                const myChart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: localTimes, // Use local times
+                        datasets: [{
+                            label: 'Hunger Level Over Time',
+                            data: levels,
+                            borderColor: 'rgba(75, 192, 192, 1)',
+                            fill: false
+                        }]
+                    }
+                });
+            });
+
+        // Function to convert UTC timestamp to local time
+        function convertUtcToLocal(utcTimestamp) {
+            const utcDate = new Date(utcTimestamp * 1000); // Convert to milliseconds
+            const localDate = new Date(utcDate.toLocaleString()); // Convert to local time
+            return localDate.toLocaleString(); // Format as a string in the local timezone
+        }
+    </script>
+    {% endblock %}
+</body>
+
+</html>
